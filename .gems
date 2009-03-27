@@ -1,0 +1,4 @@
+sinatra' --version '>= 0.9.0.4'
+haml --version '>= 2.0.0'
+RedCloth --version '>= 3.0'
+rdiscount
