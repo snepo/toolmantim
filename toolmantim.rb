@@ -48,7 +48,7 @@ helpers do
     haml(:"_#{name}", :layout => false)
   end
   def article_html(article)
-    haml(article.template, :layout => false)
+    haml(article.template, :layout => false).gsub("&mdash;", "-")
   end
   def article_image_path(article, image)
     "/images/articles/#{article.slug}/#{image}"
