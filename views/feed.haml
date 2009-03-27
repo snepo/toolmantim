@@ -21,4 +21,4 @@
       %updated= (article.updated || article.published).xmlschema
       %link{:href => "http://snepo-blagh.heroku.com#{article_path(article)}", :rel => "alternate", :hreflang => "en", :type => "text/html"}/
       %content{:type => "xhtml", "xml:lang"=>"en", "xml:base"=>"http://snepo-blagh.heroku.com/"}
-        %div{:xmlns => "http://www.w3.org/1999/xhtml"}= absoluteify_links(article_html(article))
+        %div{:xmlns => "http://www.w3.org/1999/xhtml"}= absoluteify_links(article_html(article, true))

@@ -47,8 +47,12 @@ helpers do
   def partial(name)
     haml(:"_#{name}", :layout => false)
   end
-  def article_html(article)
-    haml(article.template, :layout => false).gsub("&mdash;", "-").gsub(/<code class=".*">/, "<code>")
+  def article_html(article, atomify=false)
+    if atomify
+      haml(article.template, :layout => false).gsub("&mdash;", "-").gsub(/<code class=".*">/, "<code>")
+    else
+      haml(article.template, :layout => false)
+    end
   end
   def article_image_path(article, image)
     "/images/articles/#{article.slug}/#{image}"
