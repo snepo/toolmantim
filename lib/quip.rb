@@ -5,16 +5,18 @@ module Quip
       "erciyes",
       "penut butter on toast",
       "tim tams and coffee",
-      "bananas",
+      "New Directions",
       "your inner voice",
       "fraggin",
       "procrastination",
+      "The Little Spanish Flea",
       "faux western Buddhism",
       "complication and elaboration",
-      "the present moment",
+      "brain farts",
       "what isn&#8217;t being said",
       "social networks",
-      "mobile 3.0"
+      "mobile 3.0", 
+      "web 2.1"
     ]
   end
   def self.random
