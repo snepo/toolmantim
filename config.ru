@@ -8,7 +8,7 @@ require 'rack'
 gem 'sinatra', '0.9.0.4'
 require 'sinatra'
 
-gem 'teapot', '~> 1'
+gem 'toolmantim-teapot', '~> 1'
 require 'teapot'
 
 set :run      => false,
