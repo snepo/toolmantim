@@ -1,11 +1,11 @@
 require 'rubygems'
-gem 'sinatra' #, '~>0.9.0.4'
+gem 'sinatra'
 require 'sinatra'
 
-gem 'haml', '~> 2.0.0'
+gem 'haml'
 require 'haml'
 
-gem 'RedCloth', '~> 3.0'
+gem 'RedCloth'
 gem 'rdiscount'
 
 __DIR__ = File.dirname(__FILE__)
