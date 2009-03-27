@@ -1,5 +1,5 @@
 require 'rubygems'
-gem 'sinatra', '0.9.0.4'
+gem 'sinatra' #, '~>0.9.0.4'
 require 'sinatra'
 
 gem 'haml', '~> 2.0.0'
@@ -68,7 +68,13 @@ before do
 end
 
 get '/' do
-  haml :home
+  @articles_by_year_then_month = @articles.inject({}) do |acc, article|
+    acc[article.published.year] ||= {}
+    acc[article.published.year][article.published.month] ||= []
+    acc[article.published.year][article.published.month] << article
+    acc
+  end
+  haml :archive
 end
 
 %w( screen ie7 ie6 tumble ).each do |stylesheet|

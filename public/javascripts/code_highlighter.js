@@ -235,6 +235,25 @@ CodeHighlighter.addStyle("ruby",{
 	}
 });
 
+CodeHighlighter.addStyle("erlang",{
+	comment : {
+		exp  : /#[^\n]+/
+	},
+	brackets : {
+		exp  : /\(|\)/
+	},
+	string : {
+		exp  : /'[^']*'|"[^"]*"/
+	},
+	keywords : {
+		exp  : /\b(handle_call|init|start|behaviour|module)\b/
+	},
+	/* Added by Shelly Fisher (shelly@agileevolved.com) */
+	symbol : {
+	  exp : /([^:])(:[A-Za-z0-9_!?]+)/
+	}
+});
+
 CodeHighlighter.addStyle("javascript",{
 	comment : {
 		exp  : /(\/\/[^\n]*\n)|(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)/

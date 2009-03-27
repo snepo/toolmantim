@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Snepo - AS3 Experiments</title>
+<script type="text/javascript" src="swfobject.js"></script>
+
+<style type="text/css">
+<!--
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-color: #ffffff;
+	background-color: #000000;
+	color: #D4D0C8;
+}
+-->
+</style>
+</head>
+<body>
+
+	<div id="flashcontent">
+		<strong>You need to upgrade your Flash Player</strong>
+		This is replaced by the Flash content. 
+		Place your alternate content here and users without the Flash plugin or with 
+		Javascript turned off will see this. Content here allows you to leave out <code>noscript</code> 
+		tags. Include a link to <a href="swfobject.html?detectflash=false">bypass the detection</a> if you wish.
+	</div>
+
+	<script type="text/javascript">
+		// <![CDATA[
+		
+		var so = new SWFObject("Menu3D2.swf", "Growth.swf", "550", "400", "9", "#000000");
+		so.write("flashcontent");
+		
+		// ]]>
+	</script>
+	
+	AS3: 3D Menu system. 5kb
+</body>
+</html>

@@ -1,0 +1,49 @@
+-# title: JSFL
+-# published: 2007-07-19
+-# by: Arse
+
+:textile
+  Having recently found myself in a situation where I was required to double frame a massive amount of animation I figured I wanted to preserve my click finger and F5 key.
+  
+  JSFL to the rescue:
+  
+  <pre><code class="javascript">var additionalframes = 1;
+  function addFrames(item){
+    var frms = item.frameCount;
+    for(var j=frms;j>0;j--) 
+          item.insertFrames(additionalframes, true, j-1);
+  }
+  var dom = fl.getDocumentDOM();
+  addFrames(dom.timelines[0]);
+  for(var i=0;i<dom.library.items.length;i++) { 
+    addFrames(dom.library.items[i].timeline);
+  }</code></pre>
+  
+  The script is run as a command and will recursively traverse all time lines (including anything in your library) and add additional frames as specified by the <i>additionalframes</i> variable.
+  
+  <a href='/downloads/2006/09/04/flash-jsfl-double-frame/jsfl_double_frame.zip'>sample files (.zip 64kb)</a>
+  Another handy JSFL script for those times when you need to change font usage across an entire fla. This command is particularly handy when dealing with missing fonts that need to be updated or change at a later date.
+  
+  <pre><code class="javascript">var dom = fl.getDocumentDOM();
+  var font_select = "Arial";
+  var font_replace = "Verdana"
+  chageFonts = function(timeline) {
+    for(var layer in timeline.layers){
+      for(var frame in timeline.layers[layer].frames){
+        for(var element in timeline.layers[layer].frames[frame].elements) {
+          var item = timeline.layers[layer].frames[frame].elements[element];
+          for(var txt in item.textRuns) {
+            var font = item.textRuns[txt].textAttrs.face;
+            if(font == font_select)  
+              item.textRuns[txt].textAttrs.face = font_replace;
+          }
+        }
+      }
+    }
+  }
+  for(var i=0;i<dom.library.items.length;i++) {
+    chageFonts(dom.library.items[i].timeline)
+  }
+  chageFonts(dom.getTimeline());</code></pre>
+  
+  The script is run as a command and will recursively traverse all time lines (including anything in your library). It will update font usage at a character level thus preserving textfields with mixed font usage.

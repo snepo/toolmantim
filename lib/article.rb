@@ -41,6 +41,9 @@ class Article
   def updated
     @updated ||= self.class.parse_date(template_variable("updated"))
   end
+  def by
+    template_variable("by")
+  end
   def last_modified
     updated || published
   end

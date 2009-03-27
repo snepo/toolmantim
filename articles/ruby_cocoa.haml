@@ -1,0 +1,56 @@
+-# title: Ruby Cocoa
+-# published: 2008-09-05
+-# by: Cameron Barrie
+
+:textile
+  Ruby is such a great language, and we use it for all sorts of development; from simple scripting to  full blown web applications. One of the things I like about it, is the way it is integrated into all sorts of platforms and frameworks and OS-X's Cocoa framework is no exception. As of X-Code 3 the RubyCocoa scripting bridge is a part of the whole framework. For a Ruby programmer, it makes hacking up an OS-X app simple and quick. 
+  
+  Of course personally I'd never use this for a big heavy full blown Cocoa application, that's what Objective-C is for, but for taking something simple. Well that's a different matter.
+  
+  First we need to understand a little bit about how the framework actually works. If you're a Ruby guy and you've used Rails, you'll start to feel comfortable, since Cocoa is an MVC (Model View Controller) framework, so the abstraction is similar to that of Rails (or Merb or Camping or numerous other frameworks out there). Models are classes just like they are in Rails, as are Controllers. Views however are made up of NIB files, which are created by the Interface Builder Application. 
+  
+  What we're going to do is to create a simple echo app, that can take an input, and echo it back to you reversed. Trivial, I know but it does help to explain some core concepts about how Cocoa and Ruby work together.
+  
+  h3. Let's get started
+  
+  Start a new project in X-Code 3 and select the Cocoa Ruby Application option to create an application framework with the Ruby Scripting bridge.
+  
+  !/images/camerons_posts/cocoa_screenshot.png!
+  
+  In the classes folder on the left add a new file and name it MainController.rb. Paste the following code into the MainController , so that it looks like this:
+  
+  <pre>
+  <code class="ruby">
+  require 'osx/cocoa'
+  class MainController < OSX::NSObject
+    ib_action :display_message
+    ib_outlet :text_field, :text_display
+    
+    def display_message(sender)
+      @text_display.setStringValue(@text_field.stringValue.reverse)
+    end
+  end
+  </code>
+  </pre>
+  
+  You'll first notice the two methods, ib_action and ib_outlet, these two methods allow us to map methods and instance variables to our NIB file (remember our NIB is our View), these methods come courtesy of OSX::NSObject which we inherit from.
+  
+  Next double click the NIB file MainMenu.nib, this will launch the Interface Builder application and we can begin to build our View. 
+  
+  From the Library on the right, find NSTextField and drag two of them onto the Window, then also find a Push Button, and drag it onto the Window and rename it to Echo. 
+  
+  Your window should look something like this:
+  
+  !/images/camerons_posts/window_screenshot.png!
+  
+  Now it's time to wire things up. Firstly we need to instantiate an object from MainController. From your library find Object (it's the blue cube), and double click it, it should pop up in your MainMenu.nib window. 
+  
+  Now highlight it, and select the Tools -> Identity Inspector from the menu. Under class select MainController, you'll see it populate with the methods and instance variables we set in MainController with ib_action and ib_outlet earlier. 
+  
+  Now for the tricky bit of Interface Builder. Press the control button and drag from the Main Controller instance in the MainMenu.nib file on to the top Text Field on the Window, you should see a popup listing your two instance variable. Select text_field(this make the instance variable @text_field an instance of NSTextField), do the same again for the other NSTextField and select text_display. 
+  
+  !/images/camerons_posts/outlet_screenshot.png!
+  
+  Then Control click from the Echo button back up to the MainController instance, and this time you should see our ib_action display_message, this maps the action of this button to the method, display_message.
+  
+  Guess what, that's it, you're done. Save the work you've done in Interface Builder and quit it, head back to X-Code and select the Build and Go option. Viola when you enter some text in the top box and then click then echo button, you'll see text reversed below it.

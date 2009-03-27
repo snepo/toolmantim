@@ -4,7 +4,7 @@ The idea is that you want publishing to be previewable, simple and versioned. Yo
 
 It's somewhat similar to "Marley":http://github.com/karmi/marley and other sintra-based blogging apps with the following big exceptions:
 
-* You can use any markup format thanks to HAML's filters (e.g. @:markdown@)
+* You can use any markup format thanks to HAML's filters (e.g. @:textile@)
 * There is no commenting. This forces more quality feedback via email and other blog posts, forces you to properly integrate feedback into the article and avoids the maintenance headache of comment spam.
 
 At the moment I'm not entirely convinced there's anything worth extracting into a gem or OSS project. If anything maybe the @Article@ class so other people can create a sintra app, drop in the class/gem and fetch and sort haml-based articles from disk. Drop me a line with your thoughts.

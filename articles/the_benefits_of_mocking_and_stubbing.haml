@@ -1,0 +1,86 @@
+-# title: The benefits of Mocking and Stubbing
+-# published: 2008-09-13
+-# by: Cameron Barrie
+
+:textile
+  h3. Mocking and what the hell?
+  
+  Ok, you might be asking yourself what the hell is this guy talking about. Let me start by saying this. If you could build your application from the outside in, wouldn't that assist you in delivering a better product?
+  
+  What I mean of course, is that as developers we tend to think in ways of how to store data? How can I make it fit my idea of a relational database? So we start with UML documents, schema's, migrations and all that guff. We start from the inside and work our way out. We get this fantastic architecture that we love, we've toiled over it after all, it's like a child, and god dammit I'm not giving it up for nobody.
+  
+  h3. Welcome client
+  
+  With bold new ideas, and assumptions that you as the poor developer had no idea about.
+  
+  h3. Wait, that won't fit into my architecture!
+  
+  Now I know what you're thinking, "this is just one of the things with being agile, you need to let go". I agree whole heartily, but it doesn't make it any easier to try and fit a square peg into a round hole.
+  
+  Now imagine if you could develop the majority of your controller code (assuming you're using an MVC architecture) and get a really good practical idea - assumptions aside - that you could develop from. It's lean and really simple to change.
+  
+  bq. rSpec to the rescue.
+  
+  Mocking and stubbing is a part of rSpec these days, and since I'm a Ruby guy, I'm also an rSpec guy, so all the examples here are in rSpec, however the principles remain the same regardless of language.
+  
+  A Mock is described by the rSpec website as follows,
+  
+  bq. Mock objects are imitation objects that give you declarative control over their behaviour in the course of the execution of an example
+  
+  Personally I always found this a little confusing, so in my own words, Mocks are a way for you to use object that don't exist, or to pretend that you have an object that you in fact don't have. Let's look at an example.
+  
+  <pre>
+  <code class="ruby">
+   it "should mock an Event class since we haven't written that yet" do
+    @events = mock(["Event 1", "Event 2"])
+    User.should_receive(:find).with(:all).and_return(@events)
+  
+    events = User.find(:all)
+  
+    events.should eql(@events)
+   end
+  </code>
+  </pre>
+  
+  Before you run this... It won't work, I'm presuming we have no models/schema at all, so there is no class called User as yet.
+  
+  <pre>
+  <code class="ruby">
+   it "should mock an Event class since we haven't written that yet" do
+    User = stub!(:user) unless Class.constants.include?("User")
+    @events = mock(["Event 1", "Event 2"])
+    User.should_receive(:find).with(:all).and_return(@events)
+  
+    events = User.find(:all)
+  
+    events.should eql(@events)
+   end
+  </code>
+  </pre>
+  
+  We're now "stubbing" in an object to use in place of the User class. The difference between a "mock" and a "stub" is that a mock has an expectation of being used, i.e. that if a mock object is not used, it will cause the test to fail. It's an expectation in itself. A stub however is just a simulated object, there is no expectation placed upon it. Note also I've got *<code class="ruby">unless Class.constants.include?("User")</code>*, that way if and when you do develop a User model it will be used instead of the stubbed object.
+  
+  h3. This all seems quite pointless...
+  
+  If you're feeling like the above examples are pointless, well, you'd be right. Realistically that is a useless test. So lets look at a real example.
+  
+  <pre>
+  <code class="ruby">
+   describe LoginController do
+     it "should authenticate a user" do
+       User = stub!(:user) unless Class.constants.include?("User")
+       user = mock("A logged in user")
+       User.should_receive(:authenticate).with('login' => 'cbarrie', 'password' => 'oohhhh').and_return(user)
+  
+       post :authenticate, :user => {:login => 'cbarrie', :password => "oohhhh"}
+       response.should redirect_to(admin_url)
+     end
+   end
+  </code>
+  </pre>
+  
+  Controller tests/specs are the one place that mocks and stubs are awesome. When testing controllers, it's a bit of shame to be testing code, that you've already tested elsewhere, 1. it's slower, 2. fixtures in the database are fragile, and 3. ActiveRecord is already heavily tested. Why test the whole stack each and every time you run your controller tests/specs? It just makes it hard to find the errors.
+  
+  In the above example we now have the opportunity to test - in isolation - a method in the controller without the need to test the User class. Our authenticate method on the User class should already be tested in a separate test, there is no need to hit it twice. More so we don't even need to have a User class at this point in time to run this.
+  
+  Now you can test in isolation and begin developing with an environment that can easily adapt to the changes required by business owners.

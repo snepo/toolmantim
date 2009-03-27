@@ -1,0 +1,176 @@
+-# title: Erlang, we meet again
+-# published: 2007-07-19
+-# by: Scotty Weeks
+
+:textile
+  The latest buzz flitting about in the "I haven't used it but it sounds
+  cool" programming language crowd is Erlang. An admittedly cool and
+  exotic language, it was developed by Ericsson in the late Mesozoic and
+  has been used to build ultra-massively scalable telecom switches that
+  fail once every thirty billion years. It has all the things that you
+  could possibly want if you were developing a telco exchange, ATM
+  switch or some other highly available networked switching and routing
+  style system.
+  
+  
+  So of course people have been talking about building web apps with
+  it. Those people are silly.
+  
+  h3. There are other kinds of apps?
+  
+  Yeah. I hate to go all "bubble-bursty" but not everything is a
+  webapp. In fact at Snepo much of what we do is networked web available
+  applications that provide functionality that web apps can take
+  advantage of through service interfaces. One of those projects came up
+  recently, we had a client who needed a highly available, super
+  scalable video encoding solution. Erlang was the perfect fit for the
+  job so I fired up the old erlang-mode in Emacs, got reacquainted with
+  the "Erlang Documentation Site":http://erlang.org/doc/doc-5.5/doc and
+  set about the project.
+  
+  h3. Design Principals and the OTP
+  
+  Erlang has its roots in the world of large applications where good
+  architecture is absolutely necessary. In typical class based Object Oriented
+  programming it is common to design a top level abstract class or
+  interface for a bit of functionality. Erlang, being a functional
+  programming language doesn't have objects or classes. It does however
+  have the institutionalised design pattern of _behaviours_. They
+  accomplish much the same thing in much the same way.
+  
+  A good example is the gen_server behaviour which is declared like so: 
+  
+  <pre><code class="erlang">
+  -module(most_awesome_server_evar).
+  -behaviour(gen_server).
+  
+  start() ->
+   gen_server:start({local,most_awesome_server_evar}, 
+                     most_awesome_server_evar, [], []).
+   
+  init() -> []. 
+  
+  handle_call(do_stuff, _From, State) ->
+    {ok, stuff, State}.
+  </code></pre>
+  
+  A behaviour is a contract that says that a certain set of functions
+  will be available in the module that has declared it. The end result
+  is that you can use the gen_server module to manage communication with
+  your implementation.
+  
+  <pre><code ="shell">
+  >{ok, Pid} = most_awesome_server_evar:start().
+  >gen_server:call(Pid, do_stuff).
+  stuff
+  </code></pre>
+  
+  Thrilling. The upside is that you get the benefits and convenience of
+  object orientation style polymorphism without the pain in the arse
+  that comes from managing class hierarchies. It also sets you up to
+  work in the Byzantine world of the OTP (Open Telecom Platform). To
+  create an OTP app you need to coordinate a series of start scripts and
+  configuration files that is easily on par pain-wise with the
+  self-flagellation that occurs during Java development. At least
+  there's no XML.
+  
+  The first thing I did was spend a day or two putting together some
+  Rake tasks to automate project creation, testing, compilation, and the
+  bundling of applications. And I'm glad I did. Here's what you need to
+  do to set up the Erlang test server:
+  
+   * unpack the test_server distribution in your OTP directory
+   * create a test working test directory somewhere
+   * start the erl shell and eval ts:init() (or some such thing...)
+  
+  That sets the groundwork, now to actually set up a test environment
+  
+   * place your test .beam files in a folder at the same level as the
+     test_server directory named &lt;app_name&gt;_test   
+   * Put a test.spec file in &lt;app_name&gt;_test with just the right path information (this
+     took me a while to get right).   
+   * run the tests, either from an active erl shell or from the command
+     line, using a command along the lines of: erl -pa
+     PATH_TO_TEST_SERVER_LIB -noshell -s test_server_ctrl run_test SPEC
+     app_name_test.spec -s erlang halt
+  
+     
+  Not a whole heck of a lot of stuff to do if it's properly automated
+  but it becomes a bit of a hassle to figure out how to get things to
+  hang together due to the lack of documentation.
+     
+  Packaging the application up is a headache in and of itself. There is
+  a .rel file, a .app file, and a script file that needs to be
+  generated. I won't go through the steps because I'm still a little
+  scarred. Now this is fair enough because the Erlang OTP was developed
+  for use in one company with an already existing expert base. I'm sure
+  that as the architecture evolved nobody noticed how needlessly complex
+  the setup process had become.
+  
+  I had run across this stuff before, the last time we built something
+  in Erlang (a year or so ago) and it was just as painful
+  then. Unfortunately it's not any less so now but at least I had some
+  cobwebby memories to guide me through the hoops.
+  
+  h3. But it's not all bad
+  
+  Not by a long shot. Once you finally get around to actually developing
+  in Erlang it is a treat. By using pattern matching you end up with
+  succinct, declarative code that is perfect for routing requests from
+  one place to another and keeping tabs on available nodes.  Our video
+  server was built to have N+ encoder nodes and a couple of routers to
+  send requests to the most available encoders, this part of the job was
+  a treat.
+  
+  To top it off, transferring binary data between nodes is fast. It's
+  quite performant, depending on the task it's in the same club as C and
+  it doesn't have issues with pointers and other uglies associated with
+  programming at that level.
+  
+  What made Erlang such a good choice for this project was the ability
+  to automatically scale up the number of nodes for this project. Need
+  10 encoders? 1000? Fine, stack 'em up like pizza boxes. Some of them
+  crashed? Fine, there are supervisor nodes that are watching them and
+  will restart them when they go down. All of that would've had to
+  have been reproduced in another language, distracting us from the job
+  of actually writing the application itself.
+  
+  h3. But some of it is bad
+  
+  Erlang sucks at strings. It's a common complaint but no less valid for
+  it. There is almost no application that you can write now days that
+  doesn't deal with strings. This is particularly true if it actually
+  has to talk to the outside world. In our case there was a wee bit of
+  multi-part form encoded HTTP request parsing that needed to be dealt
+  with. She works but she's ugly.
+  
+  But once again, when does ATM switching ever have to deal with
+  strings? I can hardly begrudge the Erlang developers for overlooking
+  this but it is a huge gotcha when you are trying to use the platform
+  for something a wee bit outside of the intended purpose.
+  
+  More unforgivable is how terrible the C interface is. It's bad enough that it makes Haskell's FFI seem nice and transparent (not that the FFI is _that_ bad as far as C interfaces go...). This is strange to me because I assume
+  that there would be a lot of dealing with the C side of things in the
+  switching world. The concept is that you load a C library and then
+  start an event loop which takes byte flags. You send a list of bytes
+  to the C process, delegate those bytes to your C functions, and then
+  encode the responses as a new list of bytes which you send back to
+  Erlang. RAR. It's a wee bit error-prone.
+  
+  h3. But would you do it again?
+  
+  Of course. I wouldn't dream of developing this type of application in
+  anything else. Sure I could give Termite Scheme a shot but it's hardly
+  as road tested as Erlang is and that makes it harder to sell to a
+  client. I came for the concurrency and distribution. I was enchanted
+  by the nice abstraction of behaviours, I love the terseness of pattern
+  matching, but I hate the mess that comes out of using tuples everywhere.
+  
+  I love the reliability that comes from having processes signal each
+  other when there is a problem. I hate the esoterica required to
+  configure the application and its supervisors properly. But in the end, nothing is perfect and development is often about picking the right trade-offs.
+  
+  The beautiful thing about having so many programming languages
+  available is that there are times when you have the opportunity to truely use the right tool for the right job. Erlang was the right
+  tool for this one but I sure wouldn't try to build a web site with it.
+  

@@ -6,7 +6,7 @@ $(function() {
 // Email links
 $(function() {
   $(".email").each(function() {
-    var html = $(this).html().replace("#{thisdomain}", "toolmantim.com");
+    var html = $(this).html().replace("#{thisdomain}", "snepo.com");
     $(this).html(html).wrap("<a href='mailto:" + html + "'></a>");;
   });
   // Article feedback has subject toi

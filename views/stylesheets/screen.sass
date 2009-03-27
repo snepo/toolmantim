@@ -7,7 +7,7 @@
 !slightly_dull_text = #939ba4
 !dull_text = #5b6168
 !very_dull_text = #4c5156
-!grey_background = #393e44
+!grey_background = #000
  
 =standard_text_size
   :font-size 1.4em
@@ -113,21 +113,27 @@ body
   p.blurb, p.recent
     :margin-bottom 9px
 
-h1.site-header
+div.header
+  :width 100%
   :position absolute
-  :top 50px
-  :left 0px
-  :width 210px
-  :height 55px
-  / Not preferable but on a transparent bg
-  :text-indent -10000px 
-  span
-    :position absolute
-    :top 0
-    :left 0
-    :width 100%
-    :height 100%
-    :background transparent url(/images/logo.gif) no-repeat
+  :top 0px
+  :left 0
+  :height 62px
+  :padding-top 20px
+  :background url(/images/header-background.png) repeat-x top left
+  :border-bottom 2px solid black
+  h1.site-header
+    :width 760px
+    :height 62px
+    :margin 0 auto
+    a
+      :width 187px
+      :height 62px
+      :display block
+      :position absolute
+      img
+        :position absolute
+        :z-index 100000
 
 #navigation
   :float left
@@ -240,7 +246,14 @@ body.archive
   .about
     h1
       :margin-top 0
+      :margin-bottom 0
       
+  .author
+    +standard_text_size
+    :font-size 1.2em
+    :color = !bright_text
+    :margin-bottom 1.5em
+  
   .published
     +standard_text_size
     :margin-bottom 2em
@@ -256,9 +269,6 @@ body.archive
   .content
     :font-family "Lucida Grande", Arial, sans-serif
     :margin-bottom 50px
-  
-    > *
-      :width = !article_width
 
     p, li
       +standard_text_size
@@ -275,7 +285,7 @@ body.archive
     ol li
       :list-style decimal
 
-    p, ul, ol, blockquote
+    p, ul, ol
       :margin-bottom 1em
       code
         :font-size 1.2em
@@ -288,7 +298,7 @@ body.archive
       :line-height 1.5em
     
     h2
-      :font-size 1.6em
+      :font-size 1.8em
       :color = !dull_text
       :padding-bottom 0.1em
       :margin-top 2em
@@ -296,7 +306,7 @@ body.archive
       :text-transform uppercase
       :border-bottom-color = !very_dull_text
     h3
-      :font-size 1.6em
+      :font-size 1.8em
       :color = !dull_text
       :margin-top 1em
       :margin-bottom 0.2em
@@ -308,9 +318,11 @@ body.archive
       :padding-left 20px
       
     blockquote
+      :color #FFFFFF!important
       :padding 1em 1em 1px 1.5em
-      :background-color = !grey_background
-      :margin-bottom 2em
+      :font-size 130%
+      :font-style italic
+      :margin-bottom 1em
       :color = !slightly_dull_text
 
     pre

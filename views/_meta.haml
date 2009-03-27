@@ -1,23 +1,25 @@
 %p.intro
-  I'm <strong>Tim Lucas</strong>, a user experience designer and developer currently in Sydney&nbsp;Australia.
+  This is the blagh of the 
+  %a{:href => "http://www.snepo.com/"}Snepo 
+  peeps - Arse, Andrew, Ben, Cristina, Cam and Scott.
 
 %p.blurb
-  I run a <strong>web&nbsp;application design and development</strong> company <a
-  href="http://agencyrainford.com/">Agency&nbsp;Rainford</a>, <a
-  href="http://www.slideshare.net/toolmantim/">present</a> on various
-  technical topics, <a href="http://flickr.com/photos/toolmantim">snap the
-  occasional photo</a>, <a href="http://twitter.com/toolmantim">tweet</a>
-  my going-ons, share <a href="http://github.com/toolmantim">teh codes</a>
-  and post other tid-bits to the&nbsp;<a
-  href="http://tumble.toolmantim.com/">tumble</a>.
+  Snepo is a small software company with locations in Sydney, Australia and New York City.
+  We have a kiosk/digital signage product called 
+  %a{:href => "http://www.path-point.com/"}PathPoint
+  which is pretty hot stuff. 
+  We also like to make games. As a company we primarily concern ourselves with doing cool shit. 
+  Also, we can toast sandwiches with our minds.
 
 %p.recent
-  Most recently I published
+  Most recently 
+  = @articles.first.by 
+  published
   %a{:href => article_path(@articles.first)}= @articles.first.title
   == (#{@articles.first.published.strftime("%B %d, %Y")})
 
 %p.contact
-  Shoot an email to <span class="email">t.lucas@#{thisdomain}</span> and <strong>say&nbsp;hello</strong>.
+  Shoot an email to <span class="email">info@#{thisdomain}</span> and <strong>say&nbsp;hello</strong>.
 
 %ul#navigation
   %li
