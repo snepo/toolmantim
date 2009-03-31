@@ -44,6 +44,9 @@ class Article
   def by
     template_variable("by")
   end
+  def summary
+    template_variable("summary")
+  end
   def last_modified
     updated || published
   end

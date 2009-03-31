@@ -14,3 +14,5 @@
                 %li
                   %h4
                     %a{:href => "/articles/#{article.slug}"}= article.title
+                  %div{:style=>"display:none;"}
+                    =article.summary
