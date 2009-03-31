@@ -1,0 +1,86 @@
+-# title: iPhone Development
+-# published: 2009-03-31
+-# by: Cameron Barrie
+
+:textile
+  Apple's iPhone is one of those devices that just make you go "wow". Let's face it, it's a fantastic piece of kit. Not to mention there are a hell of a lot of them out there these days, and that number just seems to be "growing.":http://www.guardian.co.uk/media/pda/2008/oct/07/apple.mobilephones
+  
+  There are some really interesting statistics out there about the iPhone already
+  
+  *  iPhone owners are twice as likely as other Smartphone owners to be comfortable with advertising within the applications on their device. - "Source":http://theappleblog.com/2008/11/24/profile-of-an-iphone-user-interesting-statistics-about-yourself/
+  *  33 percent of iPhone owners use maps and GPS more than ten times a month, compared to 13 percent of Smartphone owners. - "Source":http://theappleblog.com/2008/11/24/profile-of-an-iphone-user-interesting-statistics-about-yourself/
+  *  Almost twice as many iPhone owners than Smartphone users complete at least one financial transaction on their mobile device each month. - "Source":http://theappleblog.com/2008/11/24/profile-of-an-iphone-user-interesting-statistics-about-yourself/
+  *  93 percent of iPhone owners have added an application versus only 66 percent of Smartphone owners. -  "Source":http://theappleblog.com/2008/11/24/profile-of-an-iphone-user-interesting-statistics-about-yourself
+  *  As of October 200 there where approximately 810 Million iPhone Users - "Source":http://www.guardian.co.uk/media/pda/2008/oct/07/apple.mobilephones
+  
+  To me it just makes good sense to get involved with a platform that not only is well and truely aboard the hype machine, but also, it's users are actually using the device. They do buy applications, they do use the GPS, they do use the accelerometer, they do... Well you get the idea. 
+  
+  This post is about our experiences with development for the iPhone. Positive and negative, what are the pitfalls, and as a potential creator of applications for the iPhone where am I going to get caught out?
+  
+  h3. Positives
+  
+  h4(indent_2). 1. The device
+
+  p(indent_4). Let's face it, the iPhone oozes cool. The multi touch screen, the accelerometer and the gps. All in all it's a great device, and I get excited about working with great hardware, to me it's important.
+  
+  h4(indent_2). 2. The development environment
+  
+  p(indent_4). At first I found it annoying, but to be honest after learning some of it's quicks, I have come to love xCode and Interface Builder. Sure it's not perfect and I'll cover some of my issues in the Gotchas, but it does go a long way towards packaging and testing your application on the iPhone. Instruments is also worth a mention, the second you start looking for memory leaks don't forget to attach your process to Instruments.
+  
+  h4(indent_2). 3. The App Store
+  
+  p(indent_4). The App Store is just a great thing in my opinion. It take all the hassle out of distributing to my audience. Sure it throws me in there with everyone else, but it just means I need to make my application meaningful for it to get noticed. I don't need to pay for hosting or anything, just upload and wait for the cash to start rolling in. 
+  
+  h4(indent_2). 4. The User Base
+  
+  p(indent_4). Lots of iPhone users have really taken on the iPhone with open arms. Unlike many of the competing platforms out there, the iPhone attracts more users to download and install third party applications then any other device. That's not due to the phone not having applications from the beginning, it's got all the usual suspects. It's just that it's so damn easy and of course Apple have done a great job of driving the hype machine straight into it. Meaning if you build an application iPhone users are more likely to install it, than users of other platforms would be.
+  
+  h3. Negatives
+  
+  h4(indent_2). 1. Provisioning
+  
+  p(indent_4). I know, I know. There are thousands of blog posts complaining about this. However in my opinion each and everyone of those posts in valid. I've spent hours battling with getting provisioning working. Then I've got it working only to come in the next day and it's magically not working. It just needs to be implemented with a little better integration into the IDE, and it'll all be fine. For a start I don't like that I need to leave the IDE to create any kind of keychain or upload that to a website to create a provisioning profile, then download it etc etc. It's just annoying and error prone(human error that is). The IDE should just do it all for you. I believe that the SDK 3.0 is going to be fixing this issue up for us all. 
+  
+  h4(indent_2). 2. Deployment to the App Store
+  
+  p(indent_4). Whilst I've listed the App Store as a positive, getting your application through the approval process can be a very slow and arduous task. I'd presume that Apple is attempting to exert some kind of quality control, which is excellent, so they should, it's there device and they don't need us developers making it run like a dog due to our crappy code. However, it can mean that you application could potentially take weeks to get up onto the app store. So if you're creating an application for a marketing campaign or some other finite time based application, the campaign might be finished before it's been approved. It's just one of those things you need to plan for.
+  
+  h3. Gotchas
+  
+  h4(indent_2). 1. Touch Screen
+
+  p(indent_4). For Snepo, our years of developing touch screen solutions for kiosks have made interface designing for the iPhone second nature, we've spent years perfecting what it's like to develop an application without a mouse, that's been a big advantage for us. It's second nature to not think of hover states for us. However a lot of UI designers often struggle with how to cue people without the use of hover states.
+  
+  h4(indent_2). 2. Memory Management
+  
+  p(indent_4). This is one of those things that all C developers just learn. You just get to know it, when and how to deallocate objects from memory when you no longer need them. Read up at sites like "Memo.tv's article on memory management with Objective-C and Cocoa":http://memo.tv/memory_management_with_objective_c_cocoa_iphone and make sure you know how, when and why things will or will not be deallocated. Objective-C uses reference counts in order to workout if an object is still being referenced. 
+  If for instance you do this.
+
+  <pre class="indent_6"><code class="objective_c">
+  NSString *aString = [[NSString alloc] initWithString: @"Ref Count Now equals 1"];
+  NSLog(@"aString's ref count is: %d", [aString retainCount]);
+  </code></pre>
+     
+  p(indent_4). This will print out "<code>aString's ref count is: 1</code>"
+  This is because we explicitly "alloc"ated memory for it, therefore we are the owner of this object, and we are responsible for de-allocting our usage or it when we're done. We do that by:
+  
+  <pre class="indent_6"><code class="objective_c">[aString release];</code></pre>
+     
+  p(indent_4). The method release simply increments the retainCount by -1, so in the above case, the retainCount would now be equal to zero. When a retainCount is equal to zero dealloc is sent to the object and it's memory is freed. If however some other object has a handle on this object and the retain count was equal to two. The dealloc would not get called and you'd never free this resource. 
+  In the below code for instance:
+  
+  <pre class="indent_6"><code class="objective_c">
+  - (void)addImageToCurrentView:(NSString *)imagePath
+  {
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    UIImage *image = [UIImage imageWithContentsOfFile:[path stringByAppendingPathComponent:imagePath]];
+    UIImageView *imageViewToAdd = [[UIImageView alloc] initWithImage:image];
+    [self addSubview: imageViewToAdd];
+   }
+  </code></pre>
+  
+  p(indent_4). The object pointer to image would have a retainCount of 2, since addSubview add's 1 to the retainCount. If when I went to scrap this resource by <code class="objective_c">[image release];</code> I would not be deallocating it from memory. Similarly if I went <code class="objective_c">[image removeFromSuperview];</code> I'd also not release the resourse. I need to in fact do both. In order for the object to be released from memory. Where, when and how retain counts are added to is one of those things you just need to read the documentation about the methods you're implementing. Suffice to say in this instance, *image would become a member variable of self, and then you'd add a [image release]; to the end of this method, that way when you did later removeFromSuperview it would be released as expected.
+  
+  All in all, I love developing for the iPhone, and I'm even more excited to see what's coming in this next generation mobile space. Not just from Apple, but also from "Google with Android":http://code.google.com/android/, and from the "Symbian":http://developer.symbian.com/main/index.jsp crowd as well. 
+  
+  For too long now mobile development has been downright painful. I think Apple has lead the way with a platform that allows us developers to create awesome applications with a minimal amount of pain, and I'm sure we'll continue to see some more awesome things come out of this lead.

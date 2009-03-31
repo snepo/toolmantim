@@ -254,6 +254,27 @@ CodeHighlighter.addStyle("erlang",{
 	}
 });
 
+CodeHighlighter.addStyle("objective_c",{
+	comment : {
+		exp  : /(\/\/[^\n]*\n)|(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)/
+	},
+	brackets : {
+		exp  : /\(|\)/
+	},
+	string : {
+		exp  : /'[^']*'|"[^"]*"/
+	},
+	keywords : {
+		exp  : /\b(NSLog|UIImageView|NSBundle|UIImage|NSString|self|var|void|while)\b/
+	},
+	global : {
+		exp  : /\b(valueOf|window|element|prototype|constructor|document|escape|unescape|parseInt|parseFloat|setTimeout|clearTimeout|setInterval|clearInterval|NaN|isNaN|Infinity)\b/
+	},
+	symbol : {
+	  exp : /\b(removeFromSuperview|addSubview|initWithImage|stringByAppendingPathComponent|imageWithContentsOfFile|mainBundle|bundlePath|alloc|release|initWithString|retainCount)\b/
+	}
+});
+
 CodeHighlighter.addStyle("javascript",{
 	comment : {
 		exp  : /(\/\/[^\n]*\n)|(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)/
