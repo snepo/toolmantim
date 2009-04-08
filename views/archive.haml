@@ -13,6 +13,5 @@
               - for article in @articles_by_year_then_month[year][month].sort
                 %li
                   %h4
-                    %a{:href => "/articles/#{article.slug}"}= article.title
-                  %div{:style=>"display:none;"}
-                    =article.summary
+                    %a{:href => "/articles/#{article.slug}", :class => "has_tip", :alt => "#{article.summary}"}= article.title
+

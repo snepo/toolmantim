@@ -14,6 +14,12 @@ $(function() {
     var a = $(this).parent();
     a.attr("href", a.attr("href") + "?subject=Re: " + $("title").text());
   });
+  $("a.has_tip").simpletip({
+    position: [-184, 23],
+    onBeforeShow: function(){
+      this.update(this.getParent().attr("alt"));
+    }
+  });
 });
 
 // Project image galleries
